@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>página Inicial</title>
+    <title>Página Inicial</title>
 </head>
 <body>
     <header>
@@ -23,11 +23,11 @@
     <main>
         <p>Esta é a página inicial do site.</p>
         <?php
-            $sql = "SELECT * FROM clientes";
+            $sql = "SELECT * FROM carrinho";
             $result = $conexao->query($sql);
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    echo "<p>" . $row["nome"] . "</p>";
+                    echo "<p>" . $row["codigo"] . "</p>";
                 }
             }
         ?>
