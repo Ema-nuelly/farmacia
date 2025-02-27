@@ -16,6 +16,7 @@
                 <li><a href="home.php">Home</a></li>
                 <li><a href="sobre.php">Sobre</a></li>
                 <li><a href="contato.php">Contato</a></li>
+                <li><a href="pagamento.php">Pagamento</a></li>
             </ul>
             <h1>Seja bem-vindo!</h1>
         </nav>

@@ -34,3 +34,27 @@ CREATE TABLE Carrinho_Produto (
     FOREIGN KEY (carrinho_id) REFERENCES Carrinho(codigo) ON DELETE CASCADE,
     FOREIGN KEY (produto_id) REFERENCES Produto(id) ON DELETE CASCADE
 );
+
+
+INSERT INTO Clientes (nome, idade, senha, email, endereco, telefone, foto) VALUES
+('Alice Silva', 28, 'hashedpassword1', 'alice@email.com', 'Rua das Flores, 123', '11987654321', 'alice.jpg'),
+('Bruno Costa', 35, 'hashedpassword2', 'bruno@email.com', 'Av. Paulista, 456', '11976543210', 'bruno.jpg'),
+('Carla Mendes', 22, 'hashedpassword3', 'carla@email.com', 'Rua do Sol, 789', '11876543211', 'carla.jpg');
+
+
+INSERT INTO Produto (nome, preco, validade, disponivel, foto, bula) VALUES
+('Paracetamol', 12.99, '2026-05-01', TRUE, 'paracetamol.jpg', 'Analgésico e antitérmico.'),
+('Dipirona', 8.50, '2025-12-15', TRUE, 'dipirona.jpg', 'Para febre e dor moderada.'),
+('Ibuprofeno', 15.75, '2026-08-20', TRUE, 'ibuprofeno.jpg', 'Anti-inflamatório para dores musculares.');
+
+
+INSERT INTO Carrinho (data_compra, valor_total) VALUES
+('2025-02-20 14:30:00', 27.49),
+('2025-02-21 10:15:00', 8.50),
+(NULL, 0);  -- a cart that hasn't been purchased yet
+
+
+INSERT INTO Carrinho_Produto (carrinho_id, produto_id, quantidade) VALUES
+(1, 1, 1), -- 1 unit of Paracetamol in cart 1
+(1, 3, 1), -- 1 unit of Ibuprofeno in cart 1
+(2, 2, 1); -- 1 unit of Dipirona in cart 2
