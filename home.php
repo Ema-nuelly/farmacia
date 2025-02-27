@@ -1,3 +1,7 @@
+<?php 
+    include "conexao.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +22,15 @@
     </header>
     <main>
         <p>Esta é a página inicial do site.</p>
-        
+        <?php
+            $sql = "SELECT * FROM clientes";
+            $result = $conexao->query($sql);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<p>" . $row["nome"] . "</p>";
+                }
+            }
+        ?>
     </main>
     <footer>
         <p>Site desenvolvido por: <i>Equipe</i></p>
