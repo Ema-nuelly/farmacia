@@ -66,7 +66,6 @@ if ($result->num_rows > 0) {
         <h1>Farmácia</h1>
         <nav>
             <ul>
-                <li><a href="/farmacia/usuario/cadastro.php">Cadastro</a></li>
                 <li><a href="/farmacia/itens.php">Itens</a></li>
                 <li><a href="/farmacia/pagamento.php">Pagamento</a></li>
                 <li>

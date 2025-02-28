@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <div class="container">
         <h2>Cadastro de Usuário</h2>
-        <form action="login.php" method="POST">
+        <form action="cadastro.php" method="POST">
             <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
                 <input type="text" name="nome" class="form-control" required>
@@ -97,10 +97,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <label for="senha" class="form-label">Senha:</label>
                 <input type="password" name="senha" class="form-control" required>
             </div>
-
+                
             <button type="submit" class="btn-custom">Cadastrar</button>
+            <div class="text-center mt-3">
+                <a href="login.php">Login</a>
+            </div>
         </form>
-        <a href="login.php" class="btn btn-primary btn-block ">Login</a>
+        
     </div>
 
     <!-- Bootstrap JS (optional, for interactivity) -->
