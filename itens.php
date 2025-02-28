@@ -1,8 +1,10 @@
-<?php 
-    include "conexao.php";
-    include('header.php');
-?>
+<?php
 
+
+// Continue fetching items for the logged-in user
+include 'conexao.php';
+include 'base/header.php';
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>

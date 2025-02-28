@@ -1,6 +1,6 @@
 <?php 
     include "conexao.php";
-    include('header.php');
+    include('base/header.php');
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +59,7 @@ $sql = "SELECT p.nome, p.preco, cp.quantidade, (p.preco * cp. quantidade) AS tot
         JOIN produto p ON cp.produto_id = p.id
         WHERE c.codigo = $carrinho_id";
 
-$result = $conexao->query($sql); # Executa a consulta
+$result = $conn->query($sql); # Executa a consulta
 
 $total_cart = 0; # Inicializa a variável que armazenará o total do carrinho
 ?>
