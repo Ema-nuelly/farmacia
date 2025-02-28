@@ -11,7 +11,7 @@ include 'C:\xampp\htdocs\farmacia\conexao.php';
 
 // Fetch user details from the database
 $userId = $_SESSION['usuario']; // Get the logged-in user's ID
-$sql = "SELECT nome, email FROM clientes WHERE id = ?";
+$sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $userId);
 $stmt->execute();
@@ -59,11 +59,26 @@ if ($result->num_rows > 0) {
         nav ul li a:hover {
             color: #f8f9fa;
         }
+        @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+        .nunito-sans-name {
+            font-family: "Nunito Sans", serif;
+            font-optical-sizing: auto;
+            font-weight: 700;
+            font-style: normal;
+            font-variation-settings:
+                "wdth" 100,
+                "YTLC" 500;
+        }
+        #logo {
+            height: 250px;
+        }
+
     </style>
 </head>
 <body>
     <header class="bg-primary text-white text-center py-3">
-        <h1>Farmácia</h1>
+        <img src="logo.png" id="logo" alt="">
         <nav>
             <ul>
                 <li><a href="/farmacia/itens.php">Itens</a></li>

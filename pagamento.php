@@ -257,3 +257,5 @@
 
 </body>
 </html>
+
+<?php include('base/footer.php'); ?>

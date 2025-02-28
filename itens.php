@@ -13,8 +13,8 @@ include 'base/header.php';
 <body>
 
 <div class="container mt-4">
-    <h1 class="text-center">Bem-vindo à Farmácia Online</h1>
-    <p class="text-center">Veja nossos produtos abaixo.</p>
+    <h1 class="text-center"><b>Bem-vindo à E-Farma</b></h1>
+    <p class="text-center"><i>Veja nossos produtos abaixo.</i></p>
 
     <div class="row">
         <?php
