@@ -74,9 +74,9 @@ if ($result->num_rows > 0) {
                     </a>
                 </li>
                 <li>
-                        <button class="btn btn-danger btn-sm mt-2 mt-sm-0" href="/farmacia/usuario/logout.php">
-                            Sair
-                        </button>
+                    <a class="btn btn-danger btn-sm mt-2 mt-sm-0" href="/farmacia/usuario/logout.php">
+                        Sair
+                    </a>
                 </li>
             </ul>
         </nav>
