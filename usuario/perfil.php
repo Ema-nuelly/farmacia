@@ -1,13 +1,10 @@
 <?php 
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    include __DIR__ . '\..\conexao.php';
-
-    include 'C:\xampp\htdocs\farmacia\base\header.php';
-
-    $sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?";
+    error_reporting(E_ALL); // mostrar todos os erros
+    ini_set('display_errors', 1); // mostrar todos os erros
+    include __DIR__ . '\..\conexao.php'; // incluir arquivo de conexão
+    $sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?"; // selecionar o usuário pelo ID
 ?>
-
+<?php include 'C:\xampp\htdocs\farmacia\base\header.php'; ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -15,7 +12,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil do Usuário</title>
-    <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ+6kF2JhV+T+Mhz9lf8I+O2rhJJcPbNrw9RdbRpk0DXkC0Vr1cuKYfssHlc" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -47,13 +43,13 @@
         <h1 class="text-center mb-4">Perfil do Usuário</h1>
         <div class="profile-info">
             <p>
-                <strong>Nome:</strong> <?php echo htmlspecialchars($usuario['nome']); ?>
+                <strong>Nome:</strong> <?php echo htmlspecialchars($usuario['nome']); ?> <!-- exibir o nome do usuário -->
             </p>
             <p>
                 <strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
-            <p><strong>Telefone:</strong> <?php echo isset($usuario['telefone']) ? htmlspecialchars($usuario['telefone']) : 'Não informado'; ?></p>
+            <p><strong>Telefone:</strong> <?php echo isset($usuario['telefone']) ? htmlspecialchars($usuario['telefone']) : 'Não informado'; ?></p> <!-- exibir o telefone do usuário -->
         </div>
-        <a href="editar_perfil.php" class="btn btn-success w-100">Editar Perfil</a>
+        <a href="editar_perfil.php" class="btn btn-success w-100">Editar Perfil</a> <!-- botão NÃO-FUNCIONAL para editar o perfil -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybZi0tL8d5f6aGQ3k" crossorigin="anonymous"></script>
@@ -61,4 +57,4 @@
 </body>
 </html>
 
-<?php include 'C:\xampp\htdocs\farmacia\base\footer.php'; ?>
+<?php include 'C:\xampp\htdocs\farmacia\base\footer.php'; ?> <!-- incluir footer -->

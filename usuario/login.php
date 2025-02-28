@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session
+session_start(); // iniciar a sessão
 include '../conexao.php'; // conectar ao banco
 ?>
 <!DOCTYPE html>
@@ -8,7 +8,6 @@ include '../conexao.php'; // conectar ao banco
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Farmácia</title>
-    <!-- Link to Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -28,25 +27,24 @@ include '../conexao.php'; // conectar ao banco
         <div class="text-center mt-3">
             <a href="/farmacia/usuario/cadastro.php">Cadastro</a>
         </div>
-        <?php if (isset($_SESSION['erro'])): ?>
+        <?php if (isset($_SESSION['erro'])): ?> <!-- exibir erro -->
             <p class="text-danger text-center mt-2">
                 <?php 
-                echo $_SESSION['erro'];
-                unset($_SESSION['erro']); // limpar erro após exibir
+                echo $_SESSION['erro']; // exibir erro
+                unset($_SESSION['erro']); // limpar a mensagem após exibir
                 ?>
             </p>
         <?php endif; ?>
-        <?php if (isset($_SESSION['success'])): ?>
+        <?php if (isset($_SESSION['success'])): ?> <!-- exibir sucesso -->
             <p class="text-success text-center mt-2">
                 <?php 
-                echo $_SESSION['success'];
-                unset($_SESSION['success']); // Clear the message after displaying it
+                echo $_SESSION['success']; // exibir sucesso
+                unset($_SESSION['success']); // limpar a mensagem após exibir
                 ?>
             </p>
         <?php endif; ?>
     </div>
 
-    <!-- Bootstrap JS and dependencies (optional) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -57,30 +55,30 @@ include '../conexao.php'; // conectar ao banco
 <?php
 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST['email']);
-    $senha = trim($_POST['senha']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") { // se o formulário foi submetido
+    $email = trim($_POST['email']); 
+    $senha = trim($_POST['senha']); 
 
-    $sql = "SELECT id, nome, senha FROM clientes WHERE email = ?"; // CHANGE: evita SQL Injection
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email); 
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $sql = "SELECT id, nome, senha FROM clientes WHERE email = ?"; // selecionar o usuário pelo e-mail
+    $stmt = $conn->prepare($sql); // preparar a consulta
+    $stmt->bind_param("s", $email);  // vincular o parâmetro
+    $stmt->execute(); // executar a consulta
+    $result = $stmt->get_result(); // obter o resultado
 
-    if ($result->num_rows > 0) {
-        $usuario = $result->fetch_assoc();
+    if ($result->num_rows > 0) { // se o usuário foi encontrado
+        $usuario = $result->fetch_assoc(); // obter os dados do usuário
         
-        if (password_verify($senha, $usuario['senha'])) {
-            session_start();
-            $_SESSION['usuario'] = $usuario['id']; // CHANGE: salva o ID em vez do nome
-            header("Location: /farmacia/itens.php");
+        if (password_verify($senha, $usuario['senha'])) { // se a senha estiver correta
+            session_start(); // iniciar a sessão
+            $_SESSION['usuario'] = $usuario['id']; // salva o ID 
+            header("Location: /farmacia/itens.php"); // redirecionar para a página de itens
             exit();
         }
     }
 
     // erro de login
     $_SESSION['erro'] = "Usuário ou senha incorretos!";
-    header("Location: login.php");
+    header("Location: login.php"); // redirecionar para a página de login
     exit();
 }
 ?>

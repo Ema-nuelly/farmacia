@@ -1,6 +1,6 @@
 <?php
-include 'conexao.php';
-include 'base/header.php';
+include 'conexao.php'; // incluir arquivo de conexão
+include 'base/header.php'; // incluir cabeçalho
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -18,26 +18,25 @@ include 'base/header.php';
 
     <div class="row">
         <?php
-        $sql = "SELECT * FROM produto";
-        $result = $conn->query($sql); 
+        $sql = "SELECT * FROM produto"; // selecionar todos os produtos
+        $result = $conn->query($sql);  // executar a consulta
 
-        while ($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) { // percorrer os resultados
         ?>
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body d-flex flex-column align-items-center">
-                        <?php $caminho = "assets/images/" . htmlspecialchars($row['foto']); ?>
-                        <img src="<?php echo $caminho; ?>" class="img-fluid mb-3" alt="<?php echo htmlspecialchars($row['nome']); ?>" style="max-width: 150px; height: auto;">
+                        <?php $caminho = "assets/images/" . htmlspecialchars($row['foto']); ?> <!-- caminho da imagem -->
+                        <img src="<?php echo $caminho; ?>" class="img-fluid mb-3" alt="<?php echo htmlspecialchars($row['nome']); ?>" style="max-width: 150px; height: auto;"> <!-- exibir a imagem -->
 
                         <div class="text-center">
-                            <h5 class="card-title"><?php echo htmlspecialchars($row['nome']); ?></h5>
-                            <p class="card-text"><?php echo htmlspecialchars($row['bula']); ?></p>
-                            <p class="card-text"><strong>R$ <?php echo number_format($row['preco'], 2, ',', '.'); ?></strong></p>
+                            <h5 class="card-title"><?php echo htmlspecialchars($row['nome']); ?></h5> <!-- exibir o nome do produto -->
+                            <p class="card-text"><?php echo htmlspecialchars($row['bula']); ?></p> <!-- exibir a bula do produto -->
+                            <p class="card-text"><strong>R$ <?php echo number_format($row['preco'], 2, ',', '.'); ?></strong></p> <!-- exibir o preço do produto -->
 
-                            <!-- Form to add to cart -->
-                            <form action="pagamento.php" method="post">
-                                <input type="hidden" name="action" value="increase">
-                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                            <form action="pagamento.php" method="post"> <!-- formulário para adicionar ao carrinho -->
+                                <input type="hidden" name="action" value="increase"> <!-- adicionar um item ao carrinho -->
+                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>"> <!-- ID do produto -->
                                 <button type="submit" class="btn btn-primary">Adicionar ao Carrinho</button>
                             </form>
                         </div>
@@ -51,4 +50,4 @@ include 'base/header.php';
 </body>
 </html>
 
-<?php include('footer.php'); ?>
+<?php include('base/footer.php'); ?> <!-- incluir o rodapé -->

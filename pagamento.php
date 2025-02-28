@@ -1,67 +1,65 @@
 <?php 
 
-    include "conexao.php";
-    include('base/header.php');
-    $total_cart = 0;
+    include "conexao.php"; // incluir o arquivo de conexão com o banco de dados
+    include('base/header.php'); // incluir o cabeçalho da página
+    $total_cart = 0; // inicializar a variável que armazenará o total do carrinho
 
-    if (isset($_SESSION['carrinho'])) {
-        foreach ($_SESSION['carrinho'] as $item) {
-            $total_cart += $item['preco'] * $item['quantidade'];
+    if (isset($_SESSION['carrinho'])) { // verificar se o carrinho existe na sessão
+        foreach ($_SESSION['carrinho'] as $item) { // percorrer os itens do carrinho
+            $total_cart += $item['preco'] * $item['quantidade']; // calcular o total do carrinho
         }
     }
 
-    // check if cart exists in session
-    if (!isset($_SESSION['carrinho'])) {
-        $_SESSION['carrinho'] = [];
+    
+    if (!isset($_SESSION['carrinho'])) { // verificar se o carrinho ainda existe na sessão
+        $_SESSION['carrinho'] = []; // criar um carrinho vazio
     }
 
-    // handle adding items to cart
-    if (isset($_POST['action']) && isset($_POST['id'])) {
-        $id = (int)$_POST['id'];
 
-        // fetch product details from the database
-        $stmt = $conn->prepare("SELECT * FROM produto WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute([$id]);
-        $result = $stmt->get_result();
-        $product = $result->fetch_assoc();
+    if (isset($_POST['action']) && isset($_POST['id'])) { // verificar se o formulário foi submetido
+        $id = (int)$_POST['id'];  // obter o ID do produto
 
-        if ($_POST['action'] == 'increase') {
-            if (!isset($_SESSION['carrinho'][$id])) {
-                $_SESSION['carrinho'][$id] = [
-                    'nome' => $product['nome'],
-                    'preco' => $product['preco'],
-                    'quantidade' => 0,
+        $stmt = $conn->prepare("SELECT * FROM produto WHERE id = ?"); // preparar a consulta
+        $stmt->bind_param("i", $id); // vincular o parâmetro
+        $stmt->execute([$id]); // executar a consulta
+        $result = $stmt->get_result(); // obter o resultado
+        $product = $result->fetch_assoc(); // obter o produto
+
+        if ($_POST['action'] == 'increase') { // verificar se o botão de adicionar foi clicado
+            if (!isset($_SESSION['carrinho'][$id])) { // verificar se o produto já está no carrinho
+                $_SESSION['carrinho'][$id] = [ // adicionar o produto ao carrinho
+                    'nome' => $product['nome'],  // obter o nome do produto
+                    'preco' => $product['preco'],  // obter o preço do produto
+                    'quantidade' => 0, // adicionar um item ao carrinho
                 ];
             }
-            $_SESSION['carrinho'][$id]['quantidade']++;
-        } elseif ($_POST['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) {
-            $_SESSION['carrinho'][$id]['quantidade']--;
+            $_SESSION['carrinho'][$id]['quantidade']++; // adicionar um item ao carrinho
+        } elseif ($_POST['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) { // verificar se o botão de remover foi clicado
+            $_SESSION['carrinho'][$id]['quantidade']--; // remover um item do carrinho
         }
-        header("Location: pagamento.php");
+        header("Location: pagamento.php"); // redirecionar para a página de pagamento
         exit;
     }
 
-    // Update the quantity in the cart when plus/minus is clicked
-    if (isset($_GET['action']) && isset($_GET['id'])) {
-        $id = (int)$_GET['id'];
+    
+    if (isset($_GET['action']) && isset($_GET['id'])) { // verificar se a ação e o ID do produto foram enviados por GET
+        $id = (int)$_GET['id']; // obter o ID do produto
         
-        // Increase quantity
-        if ($_GET['action'] == 'increase') {
-            $_SESSION['carrinho'][$id]['quantidade']++;
+        if ($_GET['action'] == 'increase') { // aumentar a quantidade
+            $_SESSION['carrinho'][$id]['quantidade']++; // adicionar um item ao carrinho
         } 
-        // Decrease quantity, but don't go below 1
-        elseif ($_GET['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) {
-            $_SESSION['carrinho'][$id]['quantidade']--;
+        
+        elseif ($_GET['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) { // diminuir a quantidade
+            $_SESSION['carrinho'][$id]['quantidade']--; // remover um item do carrinho
         }
-        header("Location: pagamento.php");
+        header("Location: pagamento.php"); // redirecionar para a página de pagamento
         exit;
     }
 
 ?>
     
 
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -201,51 +199,50 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="mb-4">Carrinho de Compras</h2>
+    <h2 class="mb-4">Cestinha de Compras</h2>
 
     <div class="cart-container">
-        <?php if (!empty($_SESSION['carrinho'])): ?>
-            <?php foreach ($_SESSION['carrinho'] as $id => $item): ?>
-                <div class="cart-item">
-                    <span class="item-name fw-bold"><?php echo $item["nome"]; ?></span>
+        <?php if (!empty($_SESSION['carrinho'])): ?> <!-- verificar se o carrinho não está vazio -->
+            <?php foreach ($_SESSION['carrinho'] as $id => $item): ?> <!-- percorrer os itens do carrinho -->                <div class="cart-item">
+                    <span class="item-name fw-bold"><?php echo $item["nome"]; ?></span> <!-- exibir o nome do produto -->
                     <span class="item-qty">
                         Quantidade: 
                         <strong>
-                            <?php echo $item["quantidade"]; ?>
+                            <?php echo $item["quantidade"]; ?> <!-- exibir a quantidade do produto -->
                         </strong>
                         
                     </span>
                     <span class="item-price">
                         Unidade: 
                         <strong>
-                            R$ <?php echo number_format($item["preco"], 2, ',', '.'); ?>
+                            R$ <?php echo number_format($item["preco"], 2, ',', '.'); ?> <!-- exibir o preço do produto -->
                         </strong>
                     </span>
                     <span class="item-total">
                         Total: 
                         <strong>
-                            R$ <?php echo number_format($item["quantidade"] * $item["preco"], 2, ',', '.'); ?>
+                            R$ <?php echo number_format($item["quantidade"] * $item["preco"], 2, ',', '.'); ?> <!-- exibir o preço total do produto -->
                         </strong>
                     </span>
 
                     <div class="quantity-btns">
                         <form action="pagamento.php" method="post">
                             <input type="hidden" name="action" value="decrease">
-                            <input type="hidden" name="id" value="<?php echo $id; ?>">
-                            <button type="submit">-</button>
+                            <input type="hidden" name="id" value="<?php echo $id; ?>"> <!-- enviar o ID do produto -->
+                            <button type="submit">-</button> 
                         </form>
                         <form action="pagamento.php" method="post">
                             <input type="hidden" name="action" value="increase">
-                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>"> <!-- enviar o ID do produto -->
                             <button type="submit">+</button>
                         </form>
-                        <a href="remover.php?id=<?php echo $id; ?>" class="remove-btn">
+                        <a href="remover.php?id=<?php echo $id; ?>" class="remove-btn"> <!-- enviar o ID do produto para remover -->
                             <i class="fas fa-trash"></i>
                         </a>
                     </div>
                 </div>
             <?php endforeach; ?>
-            <p class="total">Total: R$ <?php echo number_format($total_cart, 2, ',', '.'); ?></p>
+            <p class="total">Total: R$ <?php echo number_format($total_cart, 2, ',', '.'); ?></p> <!-- exibir o total do carrinho -->
         <?php else: ?>
             <p>Seu carrinho está vazio.</p>
         <?php endif; ?>
