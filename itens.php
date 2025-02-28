@@ -28,11 +28,18 @@ include 'base/header.php';
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo "<div class='col-md-4'>";
             echo "<div class='card mb-4'>";
-            echo "<div class='card-body'>";
+            
+            echo "<div class='card-body d-flex flex-column align-items-center'>";
+            $caminho = "assets/images/" . $row['foto']; 
+            echo "<img src='$caminho' class='img-fluid mb-3' alt='{$row['nome']}' style='max-width: 150px; height: auto;'>";
+        
+            echo "<div class='text-center'>";
             echo "<h5 class='card-title'>{$row['nome']}</h5>";
             echo "<p class='card-text'>{$row['bula']}</p>";
             echo "<p class='card-text'><strong>R$ " . number_format($row['preco'], 2, ',', '.') . "</strong></p>";
             echo "<a href='carrinho.php?id={$row['id']}' class='btn btn-primary'>Adicionar ao Carrinho</a>";
+            echo "</div>";
+        
             echo "</div></div></div>";
         }
         ?>
