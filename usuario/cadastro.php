@@ -26,8 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->bind_param("ssss", $nome, $email, $telefone, $senha);
     
     if ($stmt->execute()) {
-        echo "Usuário cadastrado com sucesso!";
+        // Success: Redirect to login page with a success message
+        $_SESSION['success'] = "Usuário cadastrado com sucesso! Por favor, faça login.";
+        header("Location: login.php");
+        exit(); // Stop further script execution
     } else {
+        // Error: Display the database error
         echo "Erro ao cadastrar: " . $conn->error;
     }
     $stmt->close();

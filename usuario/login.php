@@ -36,6 +36,14 @@ include '../conexao.php'; // conectar ao banco
                 ?>
             </p>
         <?php endif; ?>
+        <?php if (isset($_SESSION['success'])): ?>
+            <p class="text-success text-center mt-2">
+                <?php 
+                echo $_SESSION['success'];
+                unset($_SESSION['success']); // Clear the message after displaying it
+                ?>
+            </p>
+        <?php endif; ?>
     </div>
 
     <!-- Bootstrap JS and dependencies (optional) -->
