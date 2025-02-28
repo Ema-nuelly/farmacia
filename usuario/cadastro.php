@@ -2,7 +2,7 @@
    error_reporting(E_ALL);
    ini_set('display_errors', 1);
 
-   include '../base/header.php';
+   include __DIR__ . '/../conexao.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nome = trim($_POST['nome']);
@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <div class="container">
         <h2>Cadastro de Usuário</h2>
-        <form action="" method="POST">
+        <form action="login.php" method="POST">
             <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
                 <input type="text" name="nome" class="form-control" required>
@@ -100,14 +100,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <button type="submit" class="btn-custom">Cadastrar</button>
         </form>
+        <a href="login.php" class="btn btn-primary btn-block ">Login</a>
     </div>
 
     <!-- Bootstrap JS (optional, for interactivity) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-<?php include '../base/footer.php'; ?>
 
 
 

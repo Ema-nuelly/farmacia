@@ -4,7 +4,7 @@ session_start(); // Start the session
 // Check if the user is logged in
 if (!isset($_SESSION['usuario'])) {
     // Redirect to login page if not logged in
-    header("Location: usuario/login.php");
+    header("Location: usuario/login.php"); 
     exit();
 }
 include 'C:\xampp\htdocs\farmacia\conexao.php';

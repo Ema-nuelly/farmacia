@@ -1,4 +1,7 @@
-
+<?php
+session_start(); // Start the session
+include '../conexao.php'; // conectar ao banco
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -23,8 +26,7 @@
             <button type="submit" class="btn btn-primary btn-block">Entrar</button>
         </form>
         <div class="text-center mt-3">
-        <a href="/farmacia/usuario/cadastro.php">Cadastro</a>
-
+            <a href="/farmacia/usuario/cadastro.php">Cadastro</a>
         </div>
         <?php if (isset($_SESSION['erro'])): ?>
             <p class="text-danger text-center mt-2">
@@ -45,7 +47,7 @@
 
 
 <?php
-include '../conexao.php'; // conectar ao banco
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
