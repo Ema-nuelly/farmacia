@@ -1,7 +1,4 @@
 <?php
-
-
-// Continue fetching items for the logged-in user
 include 'conexao.php';
 include 'base/header.php';
 ?>
@@ -21,28 +18,33 @@ include 'base/header.php';
 
     <div class="row">
         <?php
-        $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT * FROM produto";
+        $result = $conn->query($sql); 
 
-        $stmt = $pdo->query("SELECT * FROM produto");
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo "<div class='col-md-4'>";
-            echo "<div class='card mb-4'>";
-            
-            echo "<div class='card-body d-flex flex-column align-items-center'>";
-            $caminho = "assets/images/" . $row['foto']; 
-            echo "<img src='$caminho' class='img-fluid mb-3' alt='{$row['nome']}' style='max-width: 150px; height: auto;'>";
-        
-            echo "<div class='text-center'>";
-            echo "<h5 class='card-title'>{$row['nome']}</h5>";
-            echo "<p class='card-text'>{$row['bula']}</p>";
-            echo "<p class='card-text'><strong>R$ " . number_format($row['preco'], 2, ',', '.') . "</strong></p>";
-            echo "<a href='carrinho.php?id={$row['id']}' class='btn btn-primary'>Adicionar ao Carrinho</a>";
-            echo "</div>";
-        
-            echo "</div></div></div>";
-        }
+        while ($row = $result->fetch_assoc()) {
         ?>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <?php $caminho = "assets/images/" . htmlspecialchars($row['foto']); ?>
+                        <img src="<?php echo $caminho; ?>" class="img-fluid mb-3" alt="<?php echo htmlspecialchars($row['nome']); ?>" style="max-width: 150px; height: auto;">
+
+                        <div class="text-center">
+                            <h5 class="card-title"><?php echo htmlspecialchars($row['nome']); ?></h5>
+                            <p class="card-text"><?php echo htmlspecialchars($row['bula']); ?></p>
+                            <p class="card-text"><strong>R$ <?php echo number_format($row['preco'], 2, ',', '.'); ?></strong></p>
+
+                            <!-- Form to add to cart -->
+                            <form action="pagamento.php" method="post">
+                                <input type="hidden" name="action" value="increase">
+                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                <button type="submit" class="btn btn-primary">Adicionar ao Carrinho</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
     </div>
 </div>
 

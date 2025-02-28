@@ -1,109 +1,259 @@
 <?php 
+
     include "conexao.php";
     include('base/header.php');
-?>
+    $total_cart = 0;
 
-<!DOCTYPE html>
+    if (isset($_SESSION['carrinho'])) {
+        foreach ($_SESSION['carrinho'] as $item) {
+            $total_cart += $item['preco'] * $item['quantidade'];
+        }
+    }
+
+    // check if cart exists in session
+    if (!isset($_SESSION['carrinho'])) {
+        $_SESSION['carrinho'] = [];
+    }
+
+    // handle adding items to cart
+    if (isset($_POST['action']) && isset($_POST['id'])) {
+        $id = (int)$_POST['id'];
+
+        // fetch product details from the database
+        $stmt = $conn->prepare("SELECT * FROM produto WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute([$id]);
+        $result = $stmt->get_result();
+        $product = $result->fetch_assoc();
+
+        if ($_POST['action'] == 'increase') {
+            if (!isset($_SESSION['carrinho'][$id])) {
+                $_SESSION['carrinho'][$id] = [
+                    'nome' => $product['nome'],
+                    'preco' => $product['preco'],
+                    'quantidade' => 0,
+                ];
+            }
+            $_SESSION['carrinho'][$id]['quantidade']++;
+        } elseif ($_POST['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) {
+            $_SESSION['carrinho'][$id]['quantidade']--;
+        }
+        header("Location: pagamento.php");
+        exit;
+    }
+
+    // Update the quantity in the cart when plus/minus is clicked
+    if (isset($_GET['action']) && isset($_GET['id'])) {
+        $id = (int)$_GET['id'];
+        
+        // Increase quantity
+        if ($_GET['action'] == 'increase') {
+            $_SESSION['carrinho'][$id]['quantidade']++;
+        } 
+        // Decrease quantity, but don't go below 1
+        elseif ($_GET['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) {
+            $_SESSION['carrinho'][$id]['quantidade']--;
+        }
+        header("Location: pagamento.php");
+        exit;
+    }
+
+?>
+    
+
+    <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resumo da Compra</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 50px auto;
             padding: 30px;
-            background-color: white;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
         }
         h2, h3 {
             text-align: center;
             margin-bottom: 20px;
         }
-        table {
-            width: 100%;
-            margin-bottom: 20px;
+        .cart-item {
+            display: flex;
+            flex-wrap: nowrap; 
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 10px; 
         }
-        table th, table td {
-            text-align: center;
-            padding: 12px;
+        .cart-item:last-child {
+            border-bottom: none;
         }
-        table th {
-            background-color: #007bff;
+        .item-name {
+            flex: 2 1 200px; 
+            max-width: 200px; 
+            overflow: hidden; 
+            word-wrap: break-word; 
+            white-space: normal; 
+            text-align: left; 
         }
-        table td {
-            background-color: #f8f9fa;
+        .item-qty, .item-price, .item-total {
+            flex: 1 1 auto; 
+            text-align: center; 
+        }
+
+        .remove-btn {
+            color: #e74c3c;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .remove-btn:hover {
+            color: #c0392b;
         }
         .total {
             font-weight: bold;
-            font-size: 1.2em;
-            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-align: right;
+            color: #333;
         }
+        .btnP {
+            display: inline-block;
+            width: 48%;
+            padding: 10px 20px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .cart-container {
+            margin-bottom: 20px;
+        }
+        .quantity-btns {
+            flex: 0 0 auto; 
+            display: flex;
+            align-items: center;
+            gap: 5px; 
+        }
+        .quantity-btns button {
+            padding: 3px 15px;
+            margin: 0 5px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #218838;
+            border-radius: 20%;
+            border: none;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .quantity-btns button:hover {
+            background-color: #0056b3;
+        }
+        .quantity-btns button:active {
+            background-color: #004085;
+        }
+        @media (max-width: 767.98px) {
+        .cart-item {
+            flex-direction: column; 
+            align-items: flex-start; 
+            gap: 10px; 
+        }
+
+        .item-name, .item-qty, .item-price, .item-total {
+            flex: 1 1 100%;
+            text-align: left; 
+            max-width: 100%;
+        }
+
+        .quantity-btns {
+            width: 100%; 
+            justify-content: flex-start; 
+        }
+    }
     </style>
 </head>
 <body>
-<?php
-$carrinho_id = 1;  // Substitua pelo ID do carrinho desejado
+<div class="container mt-5">
+    <h2 class="mb-4">Carrinho de Compras</h2>
 
-$sql = "SELECT p.nome, p.preco, cp.quantidade, (p.preco * cp. quantidade) AS total # Faz o cálculo do total
-        FROM carrinho c
-        JOIN carrinho_produto cp ON c.codigo = cp.carrinho_id
-        JOIN produto p ON cp.produto_id = p.id
-        WHERE c.codigo = $carrinho_id";
+    <div class="cart-container">
+        <?php if (!empty($_SESSION['carrinho'])): ?>
+            <?php foreach ($_SESSION['carrinho'] as $id => $item): ?>
+                <div class="cart-item">
+                    <span class="item-name fw-bold"><?php echo $item["nome"]; ?></span>
+                    <span class="item-qty">
+                        Quantidade: 
+                        <strong>
+                            <?php echo $item["quantidade"]; ?>
+                        </strong>
+                        
+                    </span>
+                    <span class="item-price">
+                        Unidade: 
+                        <strong>
+                            R$ <?php echo number_format($item["preco"], 2, ',', '.'); ?>
+                        </strong>
+                    </span>
+                    <span class="item-total">
+                        Total: 
+                        <strong>
+                            R$ <?php echo number_format($item["quantidade"] * $item["preco"], 2, ',', '.'); ?>
+                        </strong>
+                    </span>
 
-$result = $conn->query($sql); # Executa a consulta
-
-$total_cart = 0; # Inicializa a variável que armazenará o total do carrinho
-?>
-
-    <div class="container">
-        <h2>Resumo da Compra</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Produto</th>
-                    <th>Quantidade</th>
-                    <th>Preço</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                    // check if $result contains any rows
-                    if ($result->num_rows > 0) {
-                        // loop through the result rows
-                        while ($row = $result->fetch_assoc()) { 
-                            $product_total = $row["quantidade"] * $row["preco"];
-                            $total_cart += $product_total;
-                ?>
-                    <tr>
-                        <td><?php echo $row["nome"]; ?></td>
-                        <td><?php echo $row["quantidade"]; ?></td>
-                        <td>R$ <?php echo number_format($row["preco"], 2, ',', '.'); ?></td>
-                        <td>R$ <?php echo number_format($product_total, 2, ',', '.'); ?></td> <!-- Display total for the product -->
-                    </tr>
-                <?php 
-                        }
-                    } else {
-                        echo "<tr><td colspan='3'>Nenhum produto encontrado.</td></tr>";
-                    }
-                ?>
-            </tbody>
-        </table>
-
-        <h3 class="total">Total do Carrinho: R$ <?php echo number_format($total_cart, 2, ',', '.'); ?></h3>
+                    <div class="quantity-btns">
+                        <form action="pagamento.php" method="post">
+                            <input type="hidden" name="action" value="decrease">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <button type="submit">-</button>
+                        </form>
+                        <form action="pagamento.php" method="post">
+                            <input type="hidden" name="action" value="increase">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <button type="submit">+</button>
+                        </form>
+                        <a href="remover.php?id=<?php echo $id; ?>" class="remove-btn">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <p class="total">Total: R$ <?php echo number_format($total_cart, 2, ',', '.'); ?></p>
+        <?php else: ?>
+            <p>Seu carrinho está vazio.</p>
+        <?php endif; ?>
     </div>
 
-    <!-- Bootstrap JS (optional, for interactivity) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <a href="itens.php" class="btnP btn-secondary">Continuar Comprando</a>
+    <a href="checkout.php" class="btnP btn-success">Finalizar Compra</a>
+</div>
 
 </body>
 </html>
-
