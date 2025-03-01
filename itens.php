@@ -1,4 +1,5 @@
 <?php
+
 include 'conexao.php'; // incluir arquivo de conexão
 include 'base/header.php'; // incluir cabeçalho
 ?>

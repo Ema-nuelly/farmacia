@@ -1,26 +1,29 @@
 <?php
-session_start(); // iniciar a sessão
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    include 'C:\xampp\htdocs\farmacia\conexao.php'; // incluir arquivo de conexão
+    if (!isset($_SESSION['usuario'])) { // se o usuário não estiver logado
+        header("Location: usuario/login.php");  // redirecionar para a página de login
+        exit();
+    }
+    
 
-if (!isset($_SESSION['usuario'])) { // se o usuário não estiver logado
-    header("Location: usuario/login.php");  // redirecionar para a página de login
-    exit();
-}
-include 'C:\xampp\htdocs\farmacia\conexao.php'; // incluir arquivo de conexão
 
+    $userId = $_SESSION['usuario']; // obter o ID do usuário logado
+    $sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?"; // selecionar o usuário pelo ID
+    $stmt = $conn->prepare($sql); // preparar a consulta
+    $stmt->bind_param("i", $userId); // vincular o parâmetro
+    $stmt->execute(); // executar a consulta
+    $result = $stmt->get_result(); // obter o resultado
 
-$userId = $_SESSION['usuario']; // obter o ID do usuário logado
-$sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?"; // selecionar o usuário pelo ID
-$stmt = $conn->prepare($sql); // preparar a consulta
-$stmt->bind_param("i", $userId); // vincular o parâmetro
-$stmt->execute(); // executar a consulta
-$result = $stmt->get_result(); // obter o resultado
-
-if ($result->num_rows > 0) { // se o usuário foi encontrado
-    $usuario = $result->fetch_assoc(); // obter os dados do usuário
-} else {
-    die("Erro: Usuário não encontrado."); // exibir mensagem de erro
-}
+    if ($result->num_rows > 0) { // se o usuário foi encontrado
+        $usuario = $result->fetch_assoc(); // obter os dados do usuário
+    } else {
+        die("Erro: Usuário não encontrado."); // exibir mensagem de erro
+    }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

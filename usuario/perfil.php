@@ -1,11 +1,13 @@
 <?php 
+
+include 'C:\xampp\htdocs\farmacia\base\header.php'; 
+?>
+<?php 
     error_reporting(E_ALL); // mostrar todos os erros
     ini_set('display_errors', 1); // mostrar todos os erros
     include __DIR__ . '\..\conexao.php'; // incluir arquivo de conexão
     $sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?"; // selecionar o usuário pelo ID
 ?>
-<?php include 'C:\xampp\htdocs\farmacia\base\header.php'; ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

@@ -1,63 +1,64 @@
-<?php 
+<?php
+session_start();
+include 'conexao.php';
 
-    include "conexao.php"; // incluir o arquivo de conexão com o banco de dados
-    include('base/header.php'); // incluir o cabeçalho da página
-    $total_cart = 0; // inicializar a variável que armazenará o total do carrinho
+if (!isset($_SESSION['usuario'])) {
+    header("Location: usuario/login.php");
+    exit();
+}
 
-    if (isset($_SESSION['carrinho'])) { // verificar se o carrinho existe na sessão
-        foreach ($_SESSION['carrinho'] as $item) { // percorrer os itens do carrinho
-            $total_cart += $item['preco'] * $item['quantidade']; // calcular o total do carrinho
+$userId = $_SESSION['usuario'];
+$sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $usuario = $result->fetch_assoc();
+} else {
+    die("Erro: Usuário não encontrado.");
+}
+
+if (isset($_POST['action']) && isset($_POST['id'])) {
+    $id = (int)$_POST['id'];
+    $stmt = $conn->prepare("SELECT * FROM produto WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $product = $result->fetch_assoc();
+
+    if ($_POST['action'] == 'increase') {
+        if (!isset($_SESSION['carrinho'][$id])) {
+            $_SESSION['carrinho'][$id] = [
+                'nome' => $product['nome'],
+                'preco' => $product['preco'],
+                'quantidade' => 0,
+            ];
         }
+        $_SESSION['carrinho'][$id]['quantidade']++;
+    } elseif ($_POST['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) {
+        $_SESSION['carrinho'][$id]['quantidade']--;
     }
+    header(header: "Location: pagamento.php");
+    exit;
+}
 
-    
-    if (!isset($_SESSION['carrinho'])) { // verificar se o carrinho ainda existe na sessão
-        $_SESSION['carrinho'] = []; // criar um carrinho vazio
+include('base/header.php');
+
+$total_cart = 0;
+
+if (isset($_SESSION['carrinho'])) {
+    foreach ($_SESSION['carrinho'] as $item) {
+        $total_cart += $item['preco'] * $item['quantidade'];
     }
+}
 
+if (!isset($_SESSION['carrinho'])) {
+    $_SESSION['carrinho'] = [];
+}
 
-    if (isset($_POST['action']) && isset($_POST['id'])) { // verificar se o formulário foi submetido
-        $id = (int)$_POST['id'];  // obter o ID do produto
-
-        $stmt = $conn->prepare("SELECT * FROM produto WHERE id = ?"); // preparar a consulta
-        $stmt->bind_param("i", $id); // vincular o parâmetro
-        $stmt->execute([$id]); // executar a consulta
-        $result = $stmt->get_result(); // obter o resultado
-        $product = $result->fetch_assoc(); // obter o produto
-
-        if ($_POST['action'] == 'increase') { // verificar se o botão de adicionar foi clicado
-            if (!isset($_SESSION['carrinho'][$id])) { // verificar se o produto já está no carrinho
-                $_SESSION['carrinho'][$id] = [ // adicionar o produto ao carrinho
-                    'nome' => $product['nome'],  // obter o nome do produto
-                    'preco' => $product['preco'],  // obter o preço do produto
-                    'quantidade' => 0, // adicionar um item ao carrinho
-                ];
-            }
-            $_SESSION['carrinho'][$id]['quantidade']++; // adicionar um item ao carrinho
-        } elseif ($_POST['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) { // verificar se o botão de remover foi clicado
-            $_SESSION['carrinho'][$id]['quantidade']--; // remover um item do carrinho
-        }
-        header("Location: pagamento.php"); // redirecionar para a página de pagamento
-        exit;
-    }
-
-    
-    if (isset($_GET['action']) && isset($_GET['id'])) { // verificar se a ação e o ID do produto foram enviados por GET
-        $id = (int)$_GET['id']; // obter o ID do produto
-        
-        if ($_GET['action'] == 'increase') { // aumentar a quantidade
-            $_SESSION['carrinho'][$id]['quantidade']++; // adicionar um item ao carrinho
-        } 
-        
-        elseif ($_GET['action'] == 'decrease' && $_SESSION['carrinho'][$id]['quantidade'] > 1) { // diminuir a quantidade
-            $_SESSION['carrinho'][$id]['quantidade']--; // remover um item do carrinho
-        }
-        header("Location: pagamento.php"); // redirecionar para a página de pagamento
-        exit;
-    }
-
-?>
-    
+?>    
 
 <!DOCTYPE html>
 <html lang="pt-br">
