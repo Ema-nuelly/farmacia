@@ -1,16 +1,16 @@
 <?php 
    error_reporting(E_ALL);
-   ini_set('display_errors', 1);
+   ini_set('display_errors', 1); // mostrar todos os erros
 
    include __DIR__ . '/../conexao.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") { 
+    // essa parte do código verifica se o formulário foi submetido
     $nome = trim($_POST['nome']);
     $email = trim($_POST['email']);
     $telefone = trim($_POST['telefone']);
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
 
-    // Check if email already exists
     $stmtCheck = $conn->prepare("SELECT id FROM clientes WHERE email = ?");
     $stmtCheck->bind_param("s", $email);
     $stmtCheck->execute();
@@ -20,11 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     $stmtCheck->close();
 
-    // Insert new user
+    //  Preparar a declaração SQL
     $sql = "INSERT INTO clientes (nome, email, telefone, senha) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssss", $nome, $email, $telefone, $senha);
     
+    // Executar a declaração
     if ($stmt->execute()) {
         // Success: Redirect to login page with a success message
         $_SESSION['success'] = "Usuário cadastrado com sucesso! Por favor, faça login.";
@@ -110,8 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         
     </div>
 
-    <!-- Bootstrap JS (optional, for interactivity) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

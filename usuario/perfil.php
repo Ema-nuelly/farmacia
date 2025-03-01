@@ -1,5 +1,4 @@
 <?php 
-
 include 'C:\xampp\htdocs\farmacia\base\header.php'; 
 ?>
 <?php 
@@ -15,7 +14,6 @@ include 'C:\xampp\htdocs\farmacia\base\header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil do Usuário</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ+6kF2JhV+T+Mhz9lf8I+O2rhJJcPbNrw9RdbRpk0DXkC0Vr1cuKYfssHlc" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
     <style>
         .profile-container {
             max-width: 500px;
@@ -37,7 +35,6 @@ include 'C:\xampp\htdocs\farmacia\base\header.php';
                 width: 90%;
             }
         }
-
     </style>
 </head>
 <body>
@@ -53,10 +50,8 @@ include 'C:\xampp\htdocs\farmacia\base\header.php';
         </div>
         <a href="editar_perfil.php" class="btn btn-success w-100">Editar Perfil</a> <!-- botão NÃO-FUNCIONAL para editar o perfil -->
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybZi0tL8d5f6aGQ3k" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0h4v5+cN7F+Zt6hD9E6Gc7F3DkHz9aGFf5V4COp5wJd/K5L1" crossorigin="anonymous"></script>
 </body>
 </html>
 
-<?php include 'C:\xampp\htdocs\farmacia\base\footer.php'; ?> <!-- incluir footer -->
+<?php include 'C:\xampp\htdocs\farmacia\base\footer.php';
+?>

@@ -8,7 +8,7 @@ include 'base/header.php'; // incluir cabeçalho
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Farmácia Online</title>
+    <title>E-Farma</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -38,7 +38,7 @@ include 'base/header.php'; // incluir cabeçalho
                             <form action="pagamento.php" method="post"> <!-- formulário para adicionar ao carrinho -->
                                 <input type="hidden" name="action" value="increase"> <!-- adicionar um item ao carrinho -->
                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>"> <!-- ID do produto -->
-                                <button type="submit" class="btn btn-primary">Adicionar ao Carrinho</button>
+                                <button type="submit" class="btn btn-primary">Adicionar a Cesta</button>
                             </form>
                         </div>
                     </div>

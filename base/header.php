@@ -12,6 +12,8 @@
 
     $userId = $_SESSION['usuario']; // obter o ID do usuário logado
     $sql = "SELECT nome, email, telefone FROM clientes WHERE id = ?"; // selecionar o usuário pelo ID
+
+
     $stmt = $conn->prepare($sql); // preparar a consulta
     $stmt->bind_param("i", $userId); // vincular o parâmetro
     $stmt->execute(); // executar a consulta
@@ -28,40 +30,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Site</title>
+    <title>E-Farma</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        html, body {
-            height: 100%;
-        }
+        html, body {height: 100%;}
         body {
             display: flex;
             flex-direction: column;
         }
-        footer {
-            margin-top: auto;
-        }
-
-        /* Header styling */
+        footer {margin-top: auto;}
         header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
         }
-
-        /* Logo styling */
-        #logo {
-            height: 100px;
-        }
+        #logo {height: 100px;}
 
         @media screen and (max-width: 768px) {
-            #logo {
-                height: 70px;
-            }
+            #logo {height: 70px;}
         }
-
-        /* Navigation menu styling */
         nav ul {
             list-style-type: none;
             padding: 0;
@@ -69,11 +57,7 @@
             display: flex;
             align-items: center;
         }
-
-        nav ul li {
-            margin-left: 20px;
-        }
-
+        nav ul li {margin-left: 20px;}
         nav ul li a {
             text-decoration: none;
             color: white;
@@ -81,13 +65,10 @@
             font-size: 1rem;
             transition: color 0.3s ease;
         }
-
         nav ul li a:hover {
             color: #f8f9fa;
             text-decoration: underline;
         }
-
-        /* Logout button styling */
         .btn-logout {
             background-color: #dc3545;
             border: none;
@@ -95,18 +76,12 @@
             font-size: 0.9rem;
             transition: background-color 0.3s ease;
         }
-
-        .btn-logout:hover {
-            background-color: #bb2d3b;
-        }
-
-        /* Hamburger menu styles */
+        .btn-logout:hover {background-color: #bb2d3b;}
         .hamburger {
             display: none;
             flex-direction: column;
             cursor: pointer;
         }
-
         .hamburger div {
             width: 25px;
             height: 3px;
@@ -114,9 +89,7 @@
             margin: 4px 0;
             transition: all 0.3s ease;
         }
-        #menu {
-            z-index: 5;
-        }
+        #menu {z-index: 5;}
         @media screen and (max-width: 768px) {
             nav ul {
                 flex-direction: column;
@@ -127,20 +100,12 @@
                 width: 100%;
                 display: none; 
             }
-
-            nav ul.active {
-                display: flex;
-            }
-
+            nav ul.active {display: flex;}
             nav ul li {
                 margin: 15px 0;
                 text-align: center;
             }
-
-            .hamburger {
-                display: flex;
-            }
-
+            .hamburger {display: flex;}
             header {
                 flex-direction: column;
                 align-items: flex-start;
